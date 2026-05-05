@@ -1,6 +1,9 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import MenuItem from "@/components/MenuItem";
+<<<<<<< HEAD
+=======
 import Map from "@/components/Map";
+>>>>>>> origin/main
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { Star, Clock, MapPin, ShoppingBag } from "lucide-react";
@@ -77,6 +80,8 @@ function RestaurantDetails() {
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_320px]">
           <section>
+<<<<<<< HEAD
+=======
             {/* Location Map */}
             <div className="mb-8 rounded-2xl overflow-hidden h-48 shadow-soft">
               <Map
@@ -94,6 +99,7 @@ function RestaurantDetails() {
               />
             </div>
             
+>>>>>>> origin/main
             <h2 className="mb-4 text-xl font-bold tracking-tight">Menu</h2>
             <div className="space-y-3">
               {isM ? (

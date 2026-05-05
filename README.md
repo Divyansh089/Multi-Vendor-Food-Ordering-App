@@ -71,6 +71,12 @@ $env:PGPASSWORD = 'your_password'; psql -U postgres -d cravely_db -f seed.sql
 
 ![Register Page](img/register_page.png)
 
+### 🗄️ Database Infrastructure
+The system uses a highly relational PostgreSQL schema to manage vendors, menus, users, and orders. Below is a snapshot of the live database tables and sample records post-seeding.
+
+![Database Tables](img/db_tables.png)
+![Database Records](img/db_records.png)
+
 ## 🏗 Architecture
 The system follows a **Modular Monolith** architecture with a clear separation between the API layer, Service layer, and Persistence layer. Real-time updates are handled via optimized polling/sockets, ensuring low latency for order status changes.
 
