@@ -2,7 +2,8 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { deliveryOrders } from "@/lib/mockData";
-import { MapPin, Navigation, Phone } from "lucide-react";
+import Map from "@/components/Map";
+import { Phone } from "lucide-react";
 
 export const Route = createFileRoute("/delivery/active")({
   beforeLoad: () => {
@@ -40,20 +41,24 @@ function ActiveOrders() {
 
           {/* Map placeholder */}
           <div className="relative mt-5 h-48 overflow-hidden rounded-2xl bg-surface">
-            <div
-              className="absolute inset-0 opacity-50"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle at 20% 30%, var(--color-primary) 1px, transparent 1px), radial-gradient(circle at 70% 60%, var(--color-primary) 1px, transparent 1px)",
-                backgroundSize: "40px 40px",
+            <Map
+              origin={{
+                lat: 28.6139,
+                lng: 77.209,
+                name: deliveryOrders[0].restaurant,
               }}
+              destination={{
+                lat: 28.5921,
+                lng: 77.2341,
+                name: deliveryOrders[0].customer,
+              }}
+              currentPosition={{
+                lat: 28.603,
+                lng: 77.2215,
+                name: "Your Location",
+              }}
+              estimatedTime={15}
             />
-            <div className="absolute left-6 top-6 flex items-center gap-2 rounded-full bg-card px-3 py-1.5 text-xs font-semibold shadow-soft">
-              <MapPin className="h-3.5 w-3.5 text-primary" /> Pickup
-            </div>
-            <div className="absolute bottom-6 right-6 flex items-center gap-2 rounded-full bg-foreground px-3 py-1.5 text-xs font-semibold text-background">
-              <Navigation className="h-3.5 w-3.5" /> Drop · {deliveryOrders[0].distance}
-            </div>
           </div>
 
           {/* Stage tracker */}
