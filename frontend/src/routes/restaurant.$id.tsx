@@ -1,5 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import MenuItem from "@/components/MenuItem";
+import Map from "@/components/Map";
 import { useAuthStore } from "@/store/authStore";
 import { useCartStore } from "@/store/cartStore";
 import { Star, Clock, MapPin, ShoppingBag } from "lucide-react";
@@ -76,6 +77,23 @@ function RestaurantDetails() {
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_320px]">
           <section>
+            {/* Location Map */}
+            <div className="mb-8 rounded-2xl overflow-hidden h-48 shadow-soft">
+              <Map
+                origin={{
+                  lat: 28.6139,
+                  lng: 77.209,
+                  name: "Your Location",
+                }}
+                destination={{
+                  lat: 28.5921,
+                  lng: 77.2341,
+                  name: r.name,
+                }}
+                estimatedTime={r.eta ? parseInt(r.eta) : 20}
+              />
+            </div>
+            
             <h2 className="mb-4 text-xl font-bold tracking-tight">Menu</h2>
             <div className="space-y-3">
               {isM ? (
