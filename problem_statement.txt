@@ -1,0 +1,57 @@
+Multi-Vendor Food Ordering App
+1. Background
+Urban customers increasingly rely on online food delivery for convenience, speed, and variety. A modern food marketplace needs multiple vendors/restaurants under one unified system, real-time menu updates, order tracking, fast delivery assignment, and transparent pricing and ratings.
+2. Challenge
+Design and develop a full-stack multi-vendor food ordering application that supports multiple restaurants, individual vendor dashboards, real-time order management, delivery partner workflow, secure payments, and a rating & review system.
+3. User Roles & Functional Flow
+Customer
+•       Register/login using email, phone, Google/OTP.
+•       Browse restaurants by location, category, cuisine, ratings, price.
+•       Place orders with secure payments (UPI/Stripe/Razorpay/Wallet).
+•       Track order status in real-time (Preparing → Picked → Delivered).
+•       Rate/review restaurants and delivery partners.
+Restaurant / Vendor
+•       Manage restaurant profile, open/close status.
+•       Create and update menus (items, images, availability, pricing).
+•       Receive live order notifications, accept/reject orders.
+•       View sales reports and customer feedback.
+Delivery Partner
+•       Go online/offline, receive nearby delivery requests.
+•       Navigate to restaurant and customer location.
+•       Update delivery status (Picked → Delivered).
+4. Core Requirements
+Functional
+•       Multi-Vendor Architecture: Each vendor operates independently with their own menu & orders.
+•       Real-Time Order Management: Socket-based live order updates.
+•       Delivery Assignment Engine: Auto-assign delivery agents based on proximity, traffic, availability.
+•       Live Delivery Tracking: Map-based GPS tracking with ETA calculations.
+•       Secure Payments: UPI, Debit/Credit cards, Wallets, Razorpay/Stripe, Cash on Delivery.
+•       Ratings & Reviews: Tag-based weighted rating calculation.
+5. Technical Hints
+•       Frontend: React/Next.js, Vue.js/Nuxt, Tailwind or Material UI.
+•       Backend: Java (Spring Boot) — Recommended. Spring Boot with Spring WebSocket (STOMP/SockJS) for real-time order updates, Spring Security with JWT for role-based auth, Spring Data JPA for relational data (orders, menus, payments), Spring Cloud or API Gateway for multi-vendor routing.
+•       Database: PostgreSQL/MySQL (orders, menus); Redis (sessions, carts, live statuses).
+•       Maps & Location: Google Maps API, Mapbox, GPS-based delivery tracking.
+6. Hackathon Deliverables
+•       Customer app: browse → cart → order → track.
+•       Vendor dashboard: manage menu & orders.
+•       Delivery app: accept & deliver orders.
+•       Admin panel: control center.
+•       Architecture diagram, API documentation, ER diagram.
+7. Judging Criteria
+Category
+Weight
+End-to-End User Experience
+25%
+Real-Time Performance & Delivery Logic
+25%
+Architecture & Scalability
+20%
+Completeness (Customer + Vendor + Delivery)
+20%
+Innovation (suggestions, UI, features)
+10%
+
+ 
+8. Outcome
+A full-fledged multi-vendor food marketplace that bridges restaurants, customers, and delivery agents with a modern, scalable, and real-time full-stack architecture.
