@@ -39,6 +39,10 @@ public class Payment {
     /** External transaction/reference ID (e.g., from payment gateway) */
     private String transactionId;
 
+    private String razorpayOrderId;
+
+    private String razorpaySignature;
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 
