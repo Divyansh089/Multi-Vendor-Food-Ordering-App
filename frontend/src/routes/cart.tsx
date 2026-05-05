@@ -1,7 +1,11 @@
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
-import { Minus, Plus, Trash2, ShoppingBag, Sparkles } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, Sparkles, Loader2 } from "lucide-react";
+import api from "@/api/axios";
+import useRazorpay from "react-razorpay";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export const Route = createFileRoute("/cart")({
   beforeLoad: () => {
@@ -12,17 +16,99 @@ export const Route = createFileRoute("/cart")({
 });
 
 function Cart() {
-  const { items, restaurantName, addItem, removeItem, deleteItem, clearCart, getTotal } =
+  const { items, restaurantId, restaurantName, addItem, removeItem, deleteItem, clearCart, getTotal } =
     useCartStore();
+  const { user } = useAuthStore();
+  const [Razorpay] = useRazorpay();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const subtotal = getTotal();
   const delivery = subtotal > 0 ? (subtotal > 500 ? 0 : 39) : 0;
   const tax = Math.round(subtotal * 0.05);
   const total = subtotal + delivery + tax;
 
-  const place = () => {
-    clearCart();
-    navigate({ to: "/orders" });
+  const handlePayment = async (orderId: number) => {
+    try {
+      // 1. Create Razorpay Order in Backend
+      const res = await api.post(`/payments/create-order?orderId=${orderId}`);
+      const { razorpayOrderId } = res.data;
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_your_key_id",
+        amount: total * 100, // already in paise from total? No, total is in INR
+        currency: "INR",
+        name: "Cravely",
+        description: `Order #${orderId} from ${restaurantName}`,
+        order_id: razorpayOrderId,
+        handler: async (response: any) => {
+          try {
+            // 2. Verify Payment in Backend
+            const verifyRes = await api.post("/payments/verify", {
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+
+            if (verifyRes.data.status === "success") {
+              toast.success("Payment successful! Your order is placed.");
+              clearCart();
+              navigate({ to: "/orders" });
+            } else {
+              toast.error("Payment verification failed.");
+            }
+          } catch (err) {
+            toast.error("Error verifying payment.");
+            console.error(err);
+          }
+        },
+        prefill: {
+          name: user?.name,
+          email: user?.email,
+        },
+        theme: {
+          color: "#f43f5e", // primary color
+        },
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on("payment.failed", function (response: any) {
+        toast.error("Payment failed: " + response.error.description);
+      });
+      rzp.open();
+    } catch (err) {
+      toast.error("Failed to initiate payment.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const place = async () => {
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const orderData = {
+        vendorId: restaurantId,
+        deliveryAddress: "Mock Address (will be dynamic in real app)", // In real app, get from form
+        specialInstructions: "",
+        paymentMethod: "RAZORPAY",
+        items: items.map((i) => ({
+          menuItemId: i.id,
+          quantity: i.qty,
+        })),
+      };
+
+      const res = await api.post("/orders", orderData);
+      const placedOrder = res.data;
+
+      // Start Razorpay flow
+      await handlePayment(placedOrder.id);
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to place order.");
+      setLoading(false);
+    }
   };
 
   if (items.length === 0) {
@@ -105,9 +191,17 @@ function Cart() {
             </dl>
             <button
               onClick={place}
-              className="mt-5 w-full rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground shadow-glow hover:brightness-105"
+              disabled={loading}
+              className="mt-5 w-full flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground shadow-glow hover:brightness-105 disabled:opacity-70"
             >
-              Place order · ₹{total}
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                `Place order · ₹${total}`
+              )}
             </button>
             <p className="mt-3 text-center text-xs text-muted-foreground">
               By placing, you agree to Cravely's terms.

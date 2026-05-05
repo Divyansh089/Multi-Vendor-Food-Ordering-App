@@ -25,6 +25,9 @@ public class PaymentService {
     private final OrderRepository orderRepository;
     private final RazorpayClient razorpayClient;
 
+    @org.springframework.beans.factory.annotation.Value("${razorpay.key.secret}")
+    private String razorpaySecret;
+
     public void processPayment(com.cravely.model.Order order, PaymentMethod method, BigDecimal amount) {
         if (method == PaymentMethod.RAZORPAY) {
             // For Razorpay, we don't mark as success immediately.
@@ -82,16 +85,10 @@ public class PaymentService {
             options.put("razorpay_payment_id", razorpayPaymentId);
             options.put("razorpay_signature", razorpaySignature);
 
-            boolean isValid = Utils.verifyPaymentSignature(options, razorpayClient.getSecret());
+            boolean isValid = Utils.verifyPaymentSignature(options, razorpaySecret);
 
             if (isValid) {
-                Payment payment = paymentRepository.findByOrderId(Long.parseLong(razorpayOrderId.split("_")[1])) // Fallback if orderId mapping is direct
-                        .orElse(null);
-                
-                // Better: Find by razorpayOrderId
-                payment = paymentRepository.findAll().stream()
-                        .filter(p -> razorpayOrderId.equals(p.getRazorpayOrderId()))
-                        .findFirst()
+                Payment payment = paymentRepository.findByRazorpayOrderId(razorpayOrderId)
                         .orElseThrow(() -> new RuntimeException("Payment record not found for razorpayOrderId: " + razorpayOrderId));
 
                 payment.setStatus(PaymentStatus.SUCCESS);
