@@ -5,7 +5,7 @@ Urban customers increasingly rely on online food delivery for convenience, speed
 Design and develop a full-stack multi-vendor food ordering application that supports multiple restaurants, individual vendor dashboards, real-time order management, delivery partner workflow, secure payments, and a rating & review system.
 3. User Roles & Functional Flow
 Customer
-•       Register/login using email, phone, Google/OTP.
+•       Register/login using email, phone, Google OAuth, or OTP.
 •       Browse restaurants by location, category, cuisine, ratings, price.
 •       Place orders with secure payments (UPI/Stripe/Razorpay/Wallet).
 •       Track order status in real-time (Preparing → Picked → Delivered).
@@ -38,20 +38,15 @@ Functional
 •       Delivery app: accept & deliver orders.
 •       Admin panel: control center.
 •       Architecture diagram, API documentation, ER diagram.
-7. Judging Criteria
-Category
-Weight
-End-to-End User Experience
-25%
-Real-Time Performance & Delivery Logic
-25%
-Architecture & Scalability
-20%
-Completeness (Customer + Vendor + Delivery)
-20%
-Innovation (suggestions, UI, features)
-10%
 
- 
+7. Judging Criteria
+| Category                                  | Weight |
+|-------------------------------------------|--------|
+| End-to-End User Experience                | 25%    |
+| Real-Time Performance & Delivery Logic    | 25%    |
+| Architecture & Scalability                | 20%    |
+| Completeness (Customer + Vendor + Delivery) | 20%  |
+| Innovation (suggestions, UI, features)   | 10%    |
+
 8. Outcome
 A full-fledged multi-vendor food marketplace that bridges restaurants, customers, and delivery agents with a modern, scalable, and real-time full-stack architecture.
